@@ -27,11 +27,11 @@ inputs:
     required: false
     default: 'true'
   secrets:
-    description: 'Values for templates: pass ${{ toJSON(secrets) }}.'
+    description: 'Values for templates: the secrets as JSON, i.e. toJSON(secrets) in a workflow expression.'
     required: false
     default: '{}'
   variables:
-    description: 'Values for templates: pass ${{ toJSON(vars) }}.'
+    description: 'Values for templates: the variables as JSON, i.e. toJSON(vars) in a workflow expression.'
     required: false
     default: '{}'
   branch:
