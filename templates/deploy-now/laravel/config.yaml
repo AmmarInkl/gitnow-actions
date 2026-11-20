@@ -1,0 +1,36 @@
+# GitNow settings for a Laravel app.
+# "deploy:" works like IONOS Deploy Now's config.yaml; "gitnow:" says where on all-inkl to deploy.
+version: 1.0
+
+deploy:
+  bootstrap:            # the first deploy
+    excludes:
+      - tests
+      - node_modules
+    pre-deployment-remote-commands: []
+    post-deployment-remote-commands:
+      - php artisan migrate --force
+      - php artisan optimize
+  recurring:            # every deploy after that
+    excludes:
+      - tests
+      - node_modules
+    pre-deployment-remote-commands:
+      - php artisan down --retry=30
+    post-deployment-remote-commands:
+      - php artisan migrate --force
+      - php artisan optimize
+      - php artisan up
+
+gitnow:
+  publish-dir: ./                 # Laravel deploys the whole project
+  transport: ftps
+  base-path: /my-app              # project folder, as seen by the FTP login
+  web-root: public                # in KAS, point the domain at /my-app/production/public/
+  php-version: "8.3"
+  environments:
+    production:
+      branch: main
+      domain: www.example.com
+    previews:
+      enabled: false

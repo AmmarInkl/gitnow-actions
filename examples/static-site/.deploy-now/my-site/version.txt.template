@@ -1,0 +1,4 @@
+Deployed by GitNow
+Commit: $GITNOW_COMMIT
+Branch: $GITNOW_BRANCH
+Site: $GITNOW_APP_URL

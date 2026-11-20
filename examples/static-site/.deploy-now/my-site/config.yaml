@@ -1,0 +1,25 @@
+# GitNow settings for this repository.
+# "deploy:" works like IONOS Deploy Now's config.yaml; "gitnow:" says where on all-inkl to deploy.
+version: 1.0
+
+deploy:
+  bootstrap:            # the first deploy
+    excludes: []
+    pre-deployment-remote-commands: []
+    post-deployment-remote-commands: []
+  recurring:            # every deploy after that
+    excludes: []
+    pre-deployment-remote-commands: []
+    post-deployment-remote-commands: []
+
+gitnow:
+  publish-dir: ./                 # the folder your build produces, e.g. dist
+  transport: ftps
+  base-path: /my-site             # project folder, as seen by the FTP login
+  web-root: ""                    # folder inside each deploy that the domain shows ("" = the deploy folder itself)
+  environments:
+    production:
+      branch: main
+      domain: www.example.com     # in KAS, point this domain at /my-site/production/
+    previews:
+      enabled: false

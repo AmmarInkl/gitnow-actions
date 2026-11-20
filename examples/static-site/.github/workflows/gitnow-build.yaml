@@ -1,0 +1,42 @@
+# GitNow: build steps for this repository. You may edit this file.
+name: "GitNow: Build"
+
+on:
+  workflow_call:
+    inputs:
+      site-url:
+        required: true
+        type: string
+      publish-dir:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # ---- Your build steps go here. For example, for a Node.js site generator:
+      # - uses: actions/setup-node@v4
+      #   with:
+      #     node-version: 22
+      # - run: npm ci && npm run build
+      #   env:
+      #     SITE_URL: ${{ inputs.site-url }}
+
+      # ---- Keep these two steps: they hand the result to the deploy job.
+      - name: Package the site
+        run: tar --exclude=./.git -czf "$RUNNER_TEMP/gitnow-site.tar.gz" -C "${{ inputs.publish-dir }}" .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gitnow-site
+          path: ${{ runner.temp }}/gitnow-site.tar.gz
+          retention-days: 3
+          if-no-files-found: error
+          overwrite: true

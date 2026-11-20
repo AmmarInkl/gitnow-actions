@@ -1,0 +1,32 @@
+name: 'GitNow: resolve'
+description: 'Reads .deploy-now/<project>/config.yaml and decides what this branch deploys to: production, a preview site, or nothing.'
+author: 'GitNow'
+
+inputs:
+  project:
+    description: 'Folder name under .deploy-now/ that holds config.yaml.'
+    required: true
+  branch:
+    description: 'Branch to resolve. Defaults to the branch of this run.'
+    required: false
+    default: ''
+
+outputs:
+  enabled:
+    description: '"true" when this branch deploys somewhere.'
+  reason:
+    description: 'Why the branch is not deployed (when enabled is "false").'
+  environment:
+    description: 'GitHub environment name: "production" or "preview-<slug>".'
+  kind:
+    description: '"production" or "preview".'
+  site-url:
+    description: 'Address of the site this branch deploys to.'
+  target-path:
+    description: 'Folder on the FTP server the site is uploaded to.'
+  publish-dir:
+    description: 'Folder the build produces (gitnow.publish-dir in config.yaml).'
+
+runs:
+  using: 'node24'
+  main: 'index.js'

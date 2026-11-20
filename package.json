@@ -1,0 +1,12 @@
+{
+  "name": "gitnow-actions",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GitHub Actions that deploy repositories to all-inkl webspace over FTPS. No dependencies.",
+  "scripts": {
+    "test": "node --test test/"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

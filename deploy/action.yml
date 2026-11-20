@@ -1,0 +1,58 @@
+name: 'GitNow: deploy'
+description: 'Uploads a built site to all-inkl over FTPS, sending only changed files, and runs the commands from config.yaml.'
+author: 'GitNow'
+
+inputs:
+  project:
+    description: 'Folder name under .deploy-now/ that holds config.yaml and the templates.'
+    required: true
+  artifact:
+    description: 'The built site: a .tar.gz from the build job, or a folder.'
+    required: true
+  ftp-host:
+    description: 'FTP server, e.g. w0123456.kasserver.com.'
+    required: true
+  ftp-port:
+    description: 'FTP port.'
+    required: false
+    default: '21'
+  ftp-user:
+    description: 'FTP login. Best: an extra FTP user in KAS that is limited to this project''s folder.'
+    required: true
+  ftp-password:
+    description: 'FTP password. Pass it from a GitHub secret.'
+    required: true
+  verify-certificate:
+    description: 'Check the FTP server''s TLS certificate.'
+    required: false
+    default: 'true'
+  secrets:
+    description: 'Values for templates: pass ${{ toJSON(secrets) }}.'
+    required: false
+    default: '{}'
+  variables:
+    description: 'Values for templates: pass ${{ toJSON(vars) }}.'
+    required: false
+    default: '{}'
+  branch:
+    description: 'Branch to deploy as. Defaults to the branch of this run.'
+    required: false
+    default: ''
+  dry-run:
+    description: 'Only show what would change; change nothing on the server.'
+    required: false
+    default: 'false'
+
+outputs:
+  site-url:
+    description: 'Address of the deployed site.'
+  mode:
+    description: '"bootstrap" (first deploy) or "recurring".'
+  uploaded:
+    description: 'Number of files uploaded.'
+  removed:
+    description: 'Number of files removed.'
+
+runs:
+  using: 'node24'
+  main: 'index.js'

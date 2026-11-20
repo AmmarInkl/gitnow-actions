@@ -1,0 +1,48 @@
+# GitNow: build steps for a Laravel app. You may edit this file.
+# Copy it to .github/workflows/gitnow-build.yaml.
+name: "GitNow: Build"
+
+on:
+  workflow_call:
+    inputs:
+      site-url:
+        required: true
+        type: string
+      publish-dir:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # all-inkl has no Node.js, so front-end assets are built here.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build front-end assets
+        run: npm ci && npm run build
+        env:
+          APP_URL: ${{ inputs.site-url }}
+
+      # PHP and Composer are preinstalled on GitHub's ubuntu-latest runners.
+      - name: Install PHP packages
+        run: composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+
+      # ---- Keep these two steps: they hand the result to the deploy job.
+      - name: Package the site
+        run: tar --exclude=./.git --exclude=./node_modules -czf "$RUNNER_TEMP/gitnow-site.tar.gz" -C "${{ inputs.publish-dir }}" .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gitnow-site
+          path: ${{ runner.temp }}/gitnow-site.tar.gz
+          retention-days: 3
+          if-no-files-found: error
+          overwrite: true
